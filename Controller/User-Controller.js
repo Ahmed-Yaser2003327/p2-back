@@ -1,6 +1,7 @@
 const validateUser = require("../Validation/User-Validation");
 const User = require("../Model/User-Model");
 const bcrypt = require("bcrypt");
+ const jwt = require("jsonwebtoken");
 
 //!==========================================
 
@@ -39,8 +40,10 @@ const addUser = async (req,res) => {
 
   const newUser = new User({ userName, password: hashedPswd, email });
   await newUser.save();
-
-  res.status(203).send(" success");
+  const token = jwt.sign({ userid: newUser._id }, "this is token");
+// console.log(token)
+res.header("token",token)
+  res.status(203).send("login is successful");
 };
 
 module.exports = { getUser, addUser,valid };
